@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Organization } from '../organization/organization.model';
 import { Announcement } from './announcement.model';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +14,15 @@ export class AnnouncementsService {
   addAnnouncement(announcement: Announcement) {
     this.items.push(announcement);
   }
+
+  // createAnnouncement(
+  //   title: String,
+  //   synopsis: String,
+  //   body: String,
+  //   organization: Organization
+  // ) {
+  //   //create announcement method
+  // }
 
   createAnnouncement(
     title: String,
@@ -38,5 +50,5 @@ export class AnnouncementsService {
     return this.items[id - 1];
   }
 
-  constructor() {}
+  constructor(protected http: HttpClient) {}
 }

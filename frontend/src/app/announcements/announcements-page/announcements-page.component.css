@@ -1,0 +1,12 @@
+/* .create-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1;
+} */
+
+.announcement {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

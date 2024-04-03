@@ -12,6 +12,14 @@ const routes: Routes = [
   ProfileEditorComponent.Route,
   GateComponent.Route,
   {
+    path: 'announcements',
+    title: 'Announcements',
+    loadChildren: () =>
+      import('./announcements/announcements.module').then(
+        (m) => m.AnnouncementsModule
+      )
+  },
+  {
     path: 'coworking',
     title: 'Cowork in the XL',
     loadChildren: () =>

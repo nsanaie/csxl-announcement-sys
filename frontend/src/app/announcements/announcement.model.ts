@@ -13,4 +13,9 @@ export interface Announcement {
   synopsis: string;
   body: string;
   organization: Organization;
+  viewCount: number | null;
+  commentCount: number | null;
+  shareCount: number | null;
+  publishedDate: number;
+  editedDate: number | null;
 }

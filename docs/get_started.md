@@ -20,7 +20,7 @@ POSTGRES_HOST=db
 POSTGRES_PORT=5432
 POSTGRES_DATABASE=csxl
 HOST=localhost
-JWT_SECRET=REPLACE_ME
+JWT_SECRET=0c53e5bf-e727-4f9c-948e-2496a358740c
 ```
 
 You should replace the value associated with `JWT_SECRET` with a randomly generated value, such as a [generated UUID](https://www.uuidgenerator.net/).

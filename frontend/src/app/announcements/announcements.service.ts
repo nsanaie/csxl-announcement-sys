@@ -4,7 +4,6 @@ import { Announcement } from './announcement.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-
 @Injectable({
   providedIn: 'root'
 })

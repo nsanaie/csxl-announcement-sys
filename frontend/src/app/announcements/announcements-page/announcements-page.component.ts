@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { permissionGuard } from 'src/app/permission.guard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { Announcement } from '../announcement.model';
 import { AnnouncementsService } from '../announcements.service';
+import { AnnouncementStatus } from '../announcement.model';
 
 @Component({
   selector: 'app-announcements-page',
@@ -19,14 +20,45 @@ export class AnnouncementsPageComponent {
     canActivate: []
   };
 
-  constructor(
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private announcmentsService: AnnouncementsService
-  ) {}
+  public announcements: Announcement[];
 
-  createAnnouncement(): void {
-    // Navigate to the announcement editor for a new announcement (slug = create)
-    this.router.navigate(['announcements', '1', 'edit']);
+  constructor() {
+    this.announcements = [
+      {
+        id: 1,
+        title: 'Apply for App Team Carolina!',
+        synopsis:
+          'Applications are OUT for the Spring semester! Apply by March 1st!',
+        body: 'Sample body',
+        organization: null,
+        image: null,
+        state: AnnouncementStatus.PUBLISHED,
+        viewCount: null,
+        commentCount: null,
+        shareCount: null,
+        publishedDate: null,
+        editedDate: null
+      },
+      {
+        id: 2,
+        title: 'Apply for PM Club!',
+        synopsis:
+          'Applications are OUT for the Spring semester! Apply by March 1st!',
+        body: 'Sample body',
+        organization: null,
+        image: null,
+        state: AnnouncementStatus.PUBLISHED,
+        viewCount: null,
+        commentCount: null,
+        shareCount: null,
+        publishedDate: null,
+        editedDate: null
+      }
+    ];
   }
+
+  // createAnnouncement(): void {
+  //   // Navigate to the announcement editor for a new announcement (slug = create)
+  //   this.router.navigate(['announcements', '1', 'edit']);
+  // }
 }

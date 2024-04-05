@@ -1,7 +1,17 @@
-<mat-card appearance="outlined">
-    <mat-card-header>
-      <div class="flex-row">
-        <mat-card-title>Apply for App Team Carolina!</mat-card-title>
-      </div>
-    <mat-card-header>
-</mat-card-header>
+  <mat-card appearance="outlined">
+      <mat-card-header class="header">
+        <div class="left-container">
+          <!-- Announcement Name -->
+          <mat-card-title class="title">
+            {{ announcement.title }}
+          </mat-card-title>
+        </div>
+      </mat-card-header>
+    
+      <!-- Announcement Description -->
+      <mat-card-content class="description">
+        <p>
+          {{ announcement.synopsis }}
+        </p>
+      </mat-card-content>
+  </mat-card>

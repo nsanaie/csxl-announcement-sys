@@ -41,6 +41,8 @@ import { AboutComponent } from './about/about.component';
 import { GateComponent } from './gate/gate.component';
 import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.component';
 import { SharedModule } from './shared/shared.module';
+import { AnnouncementCardWidgetComponent } from './announcements/announcements-page/announcement-card-widget/announcement-card-widget.component';
+import { AnnouncementEditorComponent } from './announcements/announcement-editor/announcement-editor.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import { SharedModule } from './shared/shared.module';
     AboutComponent,
     GateComponent,
     ProfileEditorComponent
+    // AnnouncementEditorComponent
   ],
   imports: [
     /* Angular */

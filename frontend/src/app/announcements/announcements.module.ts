@@ -18,9 +18,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AnnouncementsPageComponent } from './announcements-page/announcements-page.component';
 import { AnnouncementsRoutingModule } from './announcements-routing.module';
+import { AnnouncementCardWidgetComponent } from './announcements-page/announcement-card-widget/announcement-card-widget.component';
 
 @NgModule({
-  declarations: [AnnouncementsPageComponent],
+  declarations: [AnnouncementsPageComponent, AnnouncementCardWidgetComponent],
   imports: [
     CommonModule,
     AnnouncementsRoutingModule,

@@ -1,1 +1,11 @@
-
+<!-- <div class="create-button">
+    <button mat-icon-button (click)="createAnnouncement()" color="basic">
+        <mat-icon>create</mat-icon>
+            <p>Create Announcement</p>
+    </button>
+</div> -->
+<p>Here are the latest CSXL announcements!</p>
+<announcement-card-widget
+    [announcement]="announcement"
+    *ngFor="let announcement of announcements"
+>

@@ -4,13 +4,11 @@ import { AnnouncementsService } from '../../announcements.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'announcement-card',
+  selector: 'announcement-card-widget',
   templateUrl: './announcement-card-widget.component.html',
   styleUrls: ['./announcement-card-widget.component.css']
 })
 export class AnnouncementCardWidgetComponent {
-  constructor(
-    private announcementsService: AnnouncementsService,
-    private router: Router
-  ) {}
+  @Input() announcement!: Announcement;
+  constructor() {}
 }

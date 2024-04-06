@@ -10,3 +10,8 @@
     flex-direction: column;
     width: 100%;
 }
+
+.page-title {
+    font: sans-serif;
+    padding: 16px;
+}

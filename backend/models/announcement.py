@@ -1,10 +1,6 @@
 from enum import Enum
-from pydantic import BaseModel, HttpUrl
-
-
-from .public_user import PublicUser
-from .organization import Organization
-from .announcement_comment import Comment
+from pydantic import BaseModel
+from datetime import datetime
 
 __authors__ = ["Nicholas Sanaie", "Mark Maio", "Tanner Macpherson", "Tyler Roth"]
 
@@ -24,14 +20,14 @@ class Announcement(BaseModel):
     headline: str
     syn: str
     body: str
-    author: PublicUser
+    author_id: int
     slug: str
-    organization: Organization | None = None
-    image: HttpUrl | None = None
+    organization_id: int | None = None
+    organization_slug: str | None = None
+    image: str | None = None
     status: AnnouncementStatus
     view_count: int = 0
     share_count: int = 0
-    comments: list[Comment] = []
     published_date: str | None = None
     modified_date: str | None = None
-    archieved_date: str | None = None
+    archived_date: str | None = None

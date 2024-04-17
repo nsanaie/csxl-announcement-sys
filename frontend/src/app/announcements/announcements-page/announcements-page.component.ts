@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { permissionGuard } from 'src/app/permission.guard';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,6 +6,14 @@ import { Observable } from 'rxjs';
 import { Announcement } from '../announcement.model';
 import { AnnouncementsService } from '../announcements.service';
 import { AnnouncementStatus } from '../announcement.model';
+import { profileResolver } from 'src/app/profile/profile.resolver';
+import {
+  announcementDetailResolver,
+  announcementResolver
+} from '../announcement.resolver';
+import { Profile } from 'src/app/models.module';
+import { NumberSymbol } from '@angular/common';
+import { AuthenticationService } from 'src/app/authentication.service';
 
 @Component({
   selector: 'app-announcements-page',
@@ -15,50 +23,27 @@ import { AnnouncementStatus } from '../announcement.model';
 export class AnnouncementsPageComponent {
   public static Route = {
     path: '',
-    title: 'Announcement Tools',
+    title: 'Announcements',
     component: AnnouncementsPageComponent,
-    canActivate: []
+    canActivate: [],
+    resolve: { profile: profileResolver, announcements: announcementResolver }
   };
 
   public announcements: Announcement[];
 
-  constructor() {
-    this.announcements = [
-      {
-        id: 1,
-        title: 'Apply for App Team Carolina!',
-        synopsis:
-          'Applications are OUT for the Spring semester! Apply by March 1st!',
-        body: 'Sample body',
-        organization: null,
-        image: null,
-        state: AnnouncementStatus.PUBLISHED,
-        viewCount: null,
-        commentCount: null,
-        shareCount: null,
-        publishedDate: null,
-        editedDate: null
-      },
-      {
-        id: 2,
-        title: 'Apply for PM Club!',
-        synopsis:
-          'Applications are OUT for the Spring semester! Apply by March 1st!',
-        body: 'Sample body',
-        organization: null,
-        image: null,
-        state: AnnouncementStatus.PUBLISHED,
-        viewCount: null,
-        commentCount: null,
-        shareCount: null,
-        publishedDate: null,
-        editedDate: null
-      }
-    ];
-  }
+  public profile: Profile;
 
-  // createAnnouncement(): void {
-  //   // Navigate to the announcement editor for a new announcement (slug = create)
-  //   this.router.navigate(['announcements', '1', 'edit']);
-  // }
+  public permValues: Map<number, number> = new Map();
+
+  constructor(
+    private route: ActivatedRoute,
+    protected snackBar: MatSnackBar
+  ) {
+    const data = this.route.snapshot.data as {
+      profile: Profile;
+      announcements: Announcement[];
+    };
+    this.profile = data.profile;
+    this.announcements = data.announcements;
+  }
 }

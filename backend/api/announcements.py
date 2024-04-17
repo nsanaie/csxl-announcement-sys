@@ -4,12 +4,12 @@ Announcemnts routes are used to create, retrieve, update and delete annoumcenets
 
 from fastapi import APIRouter, Depends
 
+from ..services import AnnouncementService
 from ..models.announcement import Announcement
+from ..models.announcement_details import AnnouncementDetails
 from ..models.announcement_comment import Comment
 from ..models.user import User
 from ..api.authentication import registered_user
-
-from ..services import OrganizationService
 
 __authors__ = ["Nicholas Sanaie", "Mark Maio", "Tanner Macpherson", "Tyler Roth"]
 
@@ -21,49 +21,102 @@ openapi_tags = {
 
 
 @api.get("", response_model=list[Announcement], tags=["Announcements"])
-def get_announcements() -> list[Announcement]:
+def get_published_announcements(
+    announcement_service: AnnouncementService = Depends(),
+) -> list[Announcement]:
     """
-    Get all announcements.
+    Get all published and public announcements.
+
+    Parameters:
+        announcement_service: a valid AnnouncementService
 
     Returns:
-        list[PublishedAnnouncement]: All `PublishedAnnouncements`s in the `Announcements` database table
+        list[Announcement]: All published `Announcement`s in the database table
     """
 
-    # return announcement_service.all()
+    return announcement_service.all_published()
+
+
+@api.get("/admin", response_model=list[Announcement], tags=["Announcements"])
+def get_admin_announcements(
+    subject: User = Depends(registered_user),
+) -> list[Announcement]:
+    """
+    Get all announcements that the user is authorized to view.
+
+    Returns:
+        list[Announcement]: All `Announcement`s in database table that the user is authorized to view.
+    """
+
+    # return announcement_service.all_admin(subject)
 
 
 @api.get(
-    "/{slug_id}",
+    "/{slug}",
     responses={404: {"model": None}},
-    response_model=Announcement,
+    response_model=AnnouncementDetails,
     tags=["Announcements"],
 )
-def get_announcement(slug_id: str) -> Announcement:
+def get_announcement(
+    slug: str, announcement_service: AnnouncementService = Depends()
+) -> AnnouncementDetails:
     """
     Get announcement with matching slug
 
     Parameters:
-        slug_id: a string representing a unique identifier for an Announcement
+        slug: a string representing a unique identifier for an Announcement
 
     Returns:
-        Announcement: Announcement with matching slug
+        AnnouncementDetails: AnnouncementDetails object with matching slug
 
     Raises:
         HTTPException 404 if get_by_slug() raises an Exception
     """
 
-    # return announcement_service.get_by_slug(slug)
+    return announcement_service.get_by_slug(slug)
+
+
+@api.get(
+    "/admin/{slug}",
+    responses={404: {"model": None}},
+    response_model=AnnouncementDetails,
+    tags=["Announcements"],
+)
+def get_announcement(
+    slug: str,
+    announcement_service: AnnouncementService = Depends(),
+    subject: User = Depends(registered_user),
+) -> AnnouncementDetails:
+    """
+    Get announcement with matching slug
+
+    Parameters:
+        slug: a string representing a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+
+    Returns:
+        AnnouncementDetails: AnnouncementDetails object with matching slug
+
+    Raises:
+        HTTPException 404 if get_by_slug() raises an Exception
+    """
+
+    # return announcement_service.get_by_slug_admin(subject, slug)
+    # TODO: add this to deisgn doc
 
 
 @api.post("", response_model=Announcement, tags=["Announcements"])
 def new_announcement(
-    announcement: Announcement, subject: User = Depends(registered_user)
+    announcement: Announcement,
+    announcement_service: AnnouncementService = Depends(),
+    subject: User = Depends(registered_user),
 ) -> Announcement:
     """
     Create announcement
 
     Parameters:
         announcement: a valid Announcement model
+        announcement_service: a valid AnnouncementService
         subject: a valid User model representing the currently logged in User
 
     Returns:
@@ -73,7 +126,7 @@ def new_announcement(
         HTTPException 422 if create() raises an Exception
     """
 
-    # return announcement_service.create(subject, announcement)
+    return announcement_service.create(subject, announcement)
 
 
 @api.put(
@@ -122,14 +175,69 @@ def delete_announcement(
     # announcement_service.delete(subject, slug)
 
 
-@api.post("/{slug_id}/comments", response_model=Comment, tags=["Announcements"])
-def new_comment(comment: Comment, subject: User = Depends(registered_user)) -> Comment:
+@api.put("/{slug}/viewCount", response_model=Announcement, tags=["Announcements"])
+def increment_views(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> Announcement:
+    """
+    Increment the announcement view count
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        Announcement: Updated announcement
+
+    Raises:
+        HTTPException 404 if update_views() raises an Exception
+    """
+
+    return announcement_service.update_views(subject, slug)
+
+
+@api.put("/{slug}/shareCount", response_model=Announcement, tags=["Announcements"])
+def increment_shares(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> Announcement:
+    """
+    Increment the announcement share count
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        Announcement: Updated announcement
+
+    Raises:
+        HTTPException 404 if update_views() raises an Exception
+    """
+
+    return announcement_service.update_shares(subject, slug)
+
+
+@api.post("/{slug}/comments", response_model=Comment, tags=["Announcements"])
+def new_comment(
+    slug: str,
+    comment: Comment,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> Comment:
     """
     Create comment for a specific announcement
 
     Parameters:
+        slug: a string representing a unique identifier for an Announcement
         comment: a valid Comment model
         subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
 
     Returns:
         Comment: Created comment
@@ -138,7 +246,7 @@ def new_comment(comment: Comment, subject: User = Depends(registered_user)) -> C
         HTTPException 422 if create_comment() raises an Exception
     """
 
-    # announcement_service.create_comment(subject, slug)
+    return announcement_service.create_comment(subject, slug, comment)
 
 
 @api.delete(

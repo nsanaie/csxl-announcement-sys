@@ -5,6 +5,7 @@
  */
 
 import { Organization } from '../organization/organization.model';
+import { PublicProfile } from '../profile/profile.service';
 
 /** Enum for the state of the announcement */
 export enum AnnouncementStatus {
@@ -13,18 +14,32 @@ export enum AnnouncementStatus {
   ARCHIVED = 'archived'
 }
 
+export interface Comment {
+  id: number;
+  text: string;
+  author_id: number;
+  author: PublicProfile | null;
+  posted_date: string;
+}
+
 /** Interface for Announcement Type (used on frontend for announcement detail) */
 export interface Announcement {
   id: number | null;
-  title: string;
-  synopsis: string;
+  slug: string;
+  headline: string;
+  syn: string;
   body: string;
-  organization: Organization | null;
   image?: string | null;
   state: AnnouncementStatus;
+  organization_id: number | null;
+  organization_slug: string | null;
+  author_id: number | null;
   viewCount: number | null;
-  commentCount: number | null;
   shareCount: number | null;
-  publishedDate: number | null;
-  editedDate: number | null;
+  published_date: string | null;
+  edited_date: string | null;
+  archived_date: string | null;
+  author: PublicProfile | null;
+  organization: Organization | null;
+  comments: Comment[] | null;
 }

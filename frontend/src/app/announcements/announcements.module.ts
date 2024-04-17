@@ -18,10 +18,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AnnouncementsPageComponent } from './announcements-page/announcements-page.component';
 import { AnnouncementsRoutingModule } from './announcements-routing.module';
-import { AnnouncementCardWidgetComponent } from './announcements-page/announcement-card-widget/announcement-card-widget.component';
+import { AnnouncementCardWidgetComponent } from './widgets/announcement-card-widget/announcement-card-widget.component';
+import { AnnouncementsDetailsPageComponent } from './announcements-details-page/announcements-details-page.component';
+import { AnnouncementDetailsPageWidgetComponent } from './widgets/announcement-details-page-widget/announcement-details-page-widget.component';
 
 @NgModule({
-  declarations: [AnnouncementsPageComponent, AnnouncementCardWidgetComponent],
+  declarations: [
+    AnnouncementsPageComponent,
+    AnnouncementCardWidgetComponent,
+    AnnouncementsDetailsPageComponent,
+    AnnouncementDetailsPageWidgetComponent
+  ],
   imports: [
     CommonModule,
     AnnouncementsRoutingModule,

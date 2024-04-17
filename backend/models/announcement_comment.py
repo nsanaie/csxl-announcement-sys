@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 from .public_user import PublicUser
 
@@ -12,5 +13,6 @@ class Comment(BaseModel):
 
     id: int
     text: str
-    author: PublicUser
+    author_id: int
+    author: PublicUser | None = None
     posted_date: str

@@ -5,7 +5,9 @@
     </button>
 
 </div> -->
-<h1 class="page-title">Here are the latest CSXL announcements!</h1>
-<announcement-card-widget
-  [announcement]="announcement"
-  *ngFor="let announcement of announcements">
+<h2 class="page-title">Latest CSXL announcements!</h2>
+    <announcement-card-widget
+        [announcement]="announcement"
+        [profile]="profile"
+        [profilePermission]="permValues"
+        *ngFor="let announcement of announcements" />

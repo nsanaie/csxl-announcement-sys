@@ -54,6 +54,11 @@ class OrganizationEntity(EntityBase):
         back_populates="organization", cascade="all,delete"
     )
 
+    # NOTE: This field establishes a one-to-many relationship between the organiztions and announcements table.
+    announcements: Mapped[list["AnnouncementEntity"]] = relationship(
+        back_populates="organization", cascade="all,delete"
+    )
+
     @classmethod
     def from_model(cls, model: Organization) -> Self:
         """

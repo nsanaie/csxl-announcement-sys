@@ -1,0 +1,105 @@
+* Profile Card CSS
+.mdc-list-item--with-two-lines .mdc-list-item__primary-text,
+.mdc-list-item--with-three-lines .mdc-list-item__primary-text {
+    margin-bottom: 0;
+}
+
+.announcement-details-page-widget {
+    min-width: 97.5%;
+}
+
+.announcement-header {
+    display: flex;
+    align-items: flex-start;
+}
+
+.announcement-top-header-group {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+}
+
+.announcement-dates {
+    display: flex;
+}
+
+.announcement-dates footer {
+    padding-right: 20px;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.announcements-link {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.announcements-btn {
+    padding: 0px 36px;
+}
+
+.organization-link {
+    position: absolute;
+    top: 55px;
+    right: 20px;
+}
+
+/* mat-card-footer {
+    margin: 0 1rem 1.25rem 1rem;
+} */
+
+/** Make cards display in one column, with the event card appearing last */
+@media only screen and (max-width: 1180px) {
+
+    .right-header-info {
+        width: 100%;
+    }
+
+    .announcement-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50% !important;
+        margin-right: 0.5rem;
+    }
+
+    .announcement-header {
+        flex-direction: column;
+        justify-content: left;
+        align-items: flex-start !important;
+    }
+
+    .announcement-name-section {
+        width: 100%;
+    }
+
+    .announcement-icons-section {
+        width: 100%;
+        height: 100% !important;
+    }
+
+    button {
+        width: max-content;
+    }
+
+    .mat-mdc-card {
+        margin: 1rem !important;
+    }
+
+    .edit-announcement-button {
+        margin-left: 0;
+    }
+}
+
+@media only screen and (max-width: 1280px) {
+    .right-header-info {
+        width: 100%;
+    }
+}

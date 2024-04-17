@@ -1,0 +1,62 @@
+/** Profile Card CSS */
+.mdc-list-item--with-two-lines .mdc-list-item__primary-text,
+.mdc-list-item--with-three-lines .mdc-list-item__primary-text {
+    margin-bottom: 0;
+}
+
+.Announcement-comments-widget {
+    min-width: 97.5%;
+}
+
+.Announcement-author-section {
+    display: flex;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+}
+
+.comment-text {
+    padding-left: 10px;
+    padding-right: 15px;
+    white-space:pre-wrap;
+}
+
+.announcement-top-header-group {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+}
+
+.Announcement-comment-posted_date {
+    display: flex;
+    padding-right: 20px;
+    color: #999;
+    font-size: 0.9em;
+    padding-left: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+/* mat-card-footer {
+    margin: 0 1rem 1.25rem 1rem;
+} */
+
+.comment-box {
+    padding-top: 0px;
+    padding-left: 17px;
+    min-width: 97.5%;
+}
+
+.comment-textbox {
+    min-width: 97.5%;
+    min-height: 100px;
+    background-color: #4B4B4B;
+    color: white;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+}

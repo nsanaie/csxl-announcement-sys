@@ -8,7 +8,10 @@ from backend.entities.academics.section_member_entity import SectionMemberEntity
 from backend.models.academics.section_member import SectionMember
 from .entity_base import EntityBase
 from .user_role_table import user_role_table
-from ..models import User
+from ..models import User, PublicUser
+
+from ..entities.announcement_entity import AnnouncementEntity
+from ..entities.announcements_comment_entity import AnnouncementCommentEntity
 
 __authors__ = ["Kris Jordan", "Matt Vu"]
 __copyright__ = "Copyright 2023 - 2024"
@@ -62,6 +65,15 @@ class UserEntity(EntityBase):
     # Section relations that the user is a part of.
     sections: Mapped[list["SectionMemberEntity"]] = relationship(back_populates="user")
 
+    # one to many relationship between announcements and users
+    announcements: Mapped[list["AnnouncementEntity"]] = relationship(
+        back_populates="author"
+    )
+
+    announcement_comments: Mapped[list["AnnouncementCommentEntity"]] = relationship(
+        back_populates="author"
+    )
+
     @classmethod
     def from_model(cls, model: User) -> Self:
         """
@@ -106,6 +118,22 @@ class UserEntity(EntityBase):
             github_avatar=self.github_avatar,
             pronouns=self.pronouns,
             accepted_community_agreement=self.accepted_community_agreement,
+        )
+
+    def to_public_model(self) -> PublicUser:
+        """
+        Create a Public User model from a UserEntity.
+
+        Returns:
+            User: A user model for API usage.
+        """
+        return PublicUser(
+            id=self.id,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            pronouns=self.pronouns,
+            email=self.email,
+            github_avatar=self.github_avatar,
         )
 
     def update(self, model: User) -> None:

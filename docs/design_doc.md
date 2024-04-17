@@ -54,11 +54,13 @@ Within the CS department, there is not a central announcement system for student
 
 **API / Routes**
 
-- Get announcements (/announcements): Returns latest announcements in a scroll view. Intended purpose is to display all announcements. Used by all personas.
+- Get all published announcements (/announcements): Returns latest published announcements in a scroll view. Intended purpose is to display all announcements that any user can view. Used by all personas.
+- Get all announcements (/announcements/admin): Returns all published, drafted, archived announcements that the user is authorized to view. Intended purpose is to display all the announcement data. Used by Club Carl and Rhonda Root.
 - Get announcement (/announcements/{slug_id}): Returns specific announcement. Intended purpose is to read more information about the announcement. Used by all personas.
 - Post announcement (/announcements/edit/{slug_id}): Receives new announcements. Intended purpose is to update the announcement feed. Used by Club Carl and Rhonda Root.
 - Put announcement data (/announcements/{slug_id}): Receives announcement update specifically for the user. Purpose is to mark an announcement as “read” or “unread” for the user. Used by Sally Student, Club Carl, and Rhonda Root.
-- Delete announcement (/announcement/{slug_id}): Deletes an announcement. Intended purpose is to delete an announcement from the feed. Used by Club Carl and Rhonda Root.
+- Delete announcement (/announcements/{slug_id}): Deletes an announcement. Intended purpose is to delete an announcement from the feed. Used by Club Carl and Rhonda Root.
+- Increment announcement view count (/{slug}/viewCount): Increments the view count statistics of an announcement. Only can be used once per user. Intended purpose is for any registered user when they click the details of an announcement.
 - Post comment (/announcements/{slug_id}/comments): Receives new comments under announcements. Purpose is to add new comments underneath an announcement. Used by Sally Student, Club Carl, and Rhonda Root.
 - Delete comment (/announcements/{slug_id}/comments): Deletes comments under announcements. Purpose is to delete comments underneath an announcement. Used by Sally Student, Club Carl, and Rhonda Root, where Sally Student and Club Carl are only allowed to delete their own comments, while Rhonda Root can delete anyone’s comment.
 

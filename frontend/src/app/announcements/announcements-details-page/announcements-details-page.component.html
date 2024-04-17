@@ -1,0 +1,38 @@
+
+    <!-- <app-announcement-details-page-widget
+      [announcement]="announcement" />
+    <app-announcement-comments-widget>
+      [comment]="comment" -->
+    <app-announcement-details-page-widget
+      [announcement]="announcement"
+      [profile]="profile" />
+<!-- <app-announcement-comments-widget [
+  comment]="comment"
+  *ngFor="let comment of comments">
+</app-announcement-comments-widget> -->
+
+
+
+<div class = "user-comment" *ngFor="let comment of comments">
+  <mat-card class="Announcement-comments-widget" appearance="outlined">
+    <!-- Comment Author -->
+    <div class="Announcement-author-section">
+      <mat-card-title class="comment-author">
+        {{ comment.author!.first_name + " " + comment.author!.last_name}}
+      </mat-card-title>
+    </div>
+    
+    <!-- Comment Body -->
+    <p class="comment-text">
+      {{ comment.text }}
+    </p>
+    <footer class="Announcement-comment-posted_date">
+      {{ comment.posted_date | date }}
+    </footer>
+  </mat-card>
+</div>
+
+<div class = "comment-box" *ngIf='isUserSignedIn'>
+  <textarea class = "comment-textbox" type="text" [(ngModel)]="userComment" placeholder="Input comment here"></textarea>
+<button class = "comment-submit-btn" (click)="submitComment()" mat-stroked-button>Submit</button>
+</div>

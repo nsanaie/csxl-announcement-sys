@@ -8,6 +8,9 @@ from .unregistered_user import UnregisteredUser
 from .role import Role
 from .role_details import RoleDetails
 from .organization import Organization
+from .announcement import Announcement
+from .announcement_details import AnnouncementDetails
+from .announcement_comment import Comment
 from .event import Event
 from .public_user import PublicUser
 from .event_details import EventDetails

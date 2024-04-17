@@ -52,8 +52,7 @@ import { AnnouncementEditorComponent } from './announcements/announcement-editor
     ErrorDialogComponent,
     HomeComponent,
     AboutComponent,
-    GateComponent,
-    ProfileEditorComponent
+    GateComponent
     // AnnouncementEditorComponent
   ],
   imports: [

@@ -1,0 +1,114 @@
+/** 
+* admin-announcement-list.component.css 
+* 
+* The admin announcement list page should provide
+* a simple, easily readable form for users to view
+* all organizations.
+*
+*/
+
+.mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+    border-color: white;
+}
+
+.header {
+    font-size: 20px;
+}
+
+.announcement-header {
+    display: flex;
+    align-items: flex-start;
+}
+
+.announcement-top-header-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+.announcement-title-section {
+    padding-top: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-avatar {
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin-right: 1rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #4786c6;
+  vertical-align: middle;
+  justify-content: center;
+  text-align: center;
+  line-height: 32px;
+  border-radius: 100%;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-groups {
+    display: grid;
+    grid-template-rows: auto auto; 
+    grid-template-columns: 1fr; 
+
+  }
+
+  .draft-text, .archived-text {
+    color: lightskyblue;
+    font-weight: bold;
+    padding-left: 20px; 
+    padding-right: 25px;
+  }
+  
+  .top-buttons-group,
+  .bottom-buttons-group {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
+
+  .top-buttons-group button,
+  .bottom-buttons-group button {
+    width: 85px;
+  }
+
+  
+  .detailsLink,
+  .editLink {
+    color: unset;
+    text-decoration: none;
+  }
+  
+  .detailsLink:focus,
+  .detailsLink:active {
+    outline: none;
+  }
+
+  .delete-btn {
+    padding-left: 10px;
+  }
+  
+  
+  

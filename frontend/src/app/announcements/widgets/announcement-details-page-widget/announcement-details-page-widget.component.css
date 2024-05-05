@@ -13,10 +13,26 @@
     align-items: flex-start;
 }
 
-.Announcement-body {
-    width: 85%;
-    margin-bottom: 2rem;white-space:pre-wrap;
+markdown ::ng-deep a {
+    color: lightskyblue;
+  }
 
+  markdown ::ng-deep img {
+    max-width:50%;
+    height: auto;
+  }
+
+.announcement-body {
+    max-width: 90%;
+    text-decoration: none;
+}
+
+.body {
+    min-width: 100%;
+}
+
+.weird-div {
+    min-width: 90%;
 }
 
 .announcement-top-header-group {
@@ -26,45 +42,80 @@
     justify-content: left;
 }
 
-.announcement-dates {
+.user-avatar {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    margin-right: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-color: #4786c6;
+    vertical-align: middle;
+    justify-content: center;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 100%;
+  }
+
+.announcement-details {
     display: flex;
+    flex-direction: column;
+    
 }
 
-.announcement-dates footer {
-    padding-right: 20px;
+.announcement-details footer {
+    position: relative;
+    bottom: -50px;
+    padding-bottom: 5px;
     color: #999;
     font-size: 0.9em;
 }
+
 
 .announcements-link {
     position: absolute;
     top: 20px;
     right: 20px;
-}
-
-.announcements-btn {
     padding: 0px 45px;
+
 }
 
 button.mat-stroked-button {
     padding: 0;
   }
 
-  button.announcement-share .mat-icon {
+button.announcement-share .mat-icon {
     margin: 0;
-  }
-
-.announcement-share {
-    position: absolute;
-    right: 15px;
-    bottom: 10px;
-    background: none;
-    border: none;
 }
 
-.announcements-buttons {
+button.announcement-comment .mat-icon {
+    margin: 0;
+}
+
+.mat-icon {
+    vertical-align: middle;
+}
+
+.buttons {
     margin-bottom: 15px;
+    padding-bottom: 40px;
 }
+
+.social-buttons {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    bottom: 0px;
+    right: 20px;
+}
+
+.social-buttons social-media-icon {
+    margin-left: 10px; /* Add spacing between each social media icon */
+  }
 
 .organization-btn {
     position: absolute;

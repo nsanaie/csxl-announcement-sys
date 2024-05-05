@@ -4,20 +4,26 @@
   appearance="outlined">
   <!-- Announcement Card Header (Image, Name, Description) -->
   <mat-card-header class="announcement-header">
-    <div>
+    <div class = "weird-div">
       <!-- Announcement Name and Logo -->
       <div class="announcement-top-header-group">
         <!-- Announcement Logo (Tablets/Phones) -->
         <img
           mat-card-image
-          src="{{ announcement!.image }}"
+          src="{{ announcement.image }}"
           class="logo"
           [ngStyle]="{
             width: '32px',
             height: '32px',
             'margin-right': '16px',
             'border-radius': '50%'
-          }" />
+          }" 
+          *ngIf="announcement!.image; else default"/>
+        <ng-template #default>
+          <p *ngIf="profile && profile.first_name && profile.last_name" class="user-avatar">
+            {{ profile!.first_name.charAt(0) }}{{ profile!.last_name.charAt(0) }}
+          </p>
+        </ng-template>
         <!-- Announcements Name -->
         <div class="Announcement-title-section">
           <mat-card-title class="title">
@@ -27,31 +33,68 @@
       </div>
 
       <!-- Announcement Body -->
-      <p
-        class="Announcement-body">
-        {{ announcement!.body }}
-      </p>
-      <div class="announcement-dates">
+      <div class="announcement-body">
+        <markdown
+          class="body"
+          [data]='announcement!.body'>
+        </markdown>
+      </div>
+      <div class="announcement-details">
+        <footer class = "announcement-viewCount" *ngIf="announcement.view_count">
+          View Count: {{announcement.view_count}}
+         </footer>
+         <footer class = "announcement-shareCount" *ngIf="announcement.view_count">
+          Share Count: {{announcement.share_count}}
+         </footer>
         <footer class="announcement-publishedDate" *ngIf="announcement.published_date">
-          Published: {{ announcement.published_date }}
+          Published: {{ announcement.published_date | date: 'MMM d, y, h:mm a' }}
          </footer>
-         <footer class = "announcement-editedDate" *ngIf="announcement.edited_date">
-          Edited: {{announcement.edited_date}}
+         <footer class = "announcement-editedDate" *ngIf="announcement.modified_date">
+          Edited: {{announcement.modified_date | date: 'MMM d, y, h:mm a' }}
          </footer>
+         <footer class = "announcement-archivedDate" *ngIf="announcement.status == AnnouncementStatus.ARCHIVED">
+          Archived: {{announcement.archived_date | date: 'MMM d, y, h:mm a' }}
+         </footer>
+         
 
       </div>
-      <div class = "announcements-buttons">
-        <button *ngIf="isUserSignedIn" class = "announcement-share" mat-stroked-button (click)="copyUrl()">
-          <mat-icon>ios_share</mat-icon>
-        </button>
+      <div class = "buttons">
+        <div class = "social-buttons">
+          <p *ngIf="isUserSignedIn" class="upvote-count">{{announcement.upvote_count!}}</p>
+          <social-media-icon
+            [fontIcon]="'thumb_up_off_alt'"
+            *ngIf="isUserSignedIn && !didUserUpvote" 
+            (click)="handleAddUpvoteClick()"/>
+            <social-media-icon
+            [fontIcon]="'thumb_up_alt'"
+            *ngIf="isUserSignedIn && didUserUpvote" 
+            (click)="handleRemoveUpvoteClick()"/>
+            <social-media-icon
+            [fontIcon]="'favorite_border'"
+            *ngIf="isUserSignedIn && !didUserFavorite"
+            (click)="handleAddFavoriteClick()"/>
+            <social-media-icon
+            [fontIcon]="'favorite'"
+            *ngIf="isUserSignedIn && didUserFavorite"
+            (click)="handleRemoveFavoriteClick()"/>
+            <social-media-icon
+            [fontIcon]="'ios_share'"
+            *ngIf="isUserSignedIn" 
+            (click)="handleShareClick()"/>
+          <social-media-icon
+            [fontIcon]="'chat_bubble_outline'"
+            *ngIf="isUserSignedIn && !commentBox" 
+            (click)="handleCommentClick()"/>
+            <social-media-icon
+            [fontIcon]="'chat_bubble'"
+            *ngIf="isUserSignedIn && commentBox" 
+            (click)="handleCommentClick()"/>
+          </div>
+        <button class="announcements-link" mat-stroked-button (click)="goBack()">Back</button>
+
         <a
-          class="announcements-link"
-          [routerLink]="['/announcements']">
-          <button class="announcements-btn" mat-stroked-button>Back</button>
-        </a>
-        <a
-        *ngIf="announcement.organization_slug !== undefined"
-        (click)="handleClick()">
+        *ngIf="announcement.organization_slug"
+        (click)="handleOrgClick()">
           <button mat-stroked-button class="organization-btn">Organization</button>
         </a>
       </div>

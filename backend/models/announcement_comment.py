@@ -15,4 +15,4 @@ class Comment(BaseModel):
     text: str
     author_id: int
     author: PublicUser | None = None
-    posted_date: str
+    posted_date: datetime | None = None

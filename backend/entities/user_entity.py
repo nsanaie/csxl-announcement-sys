@@ -1,16 +1,19 @@
 """Definition of SQLAlchemy table-backed object mapping entity for Users."""
 
-from sqlalchemy import Integer, String, Boolean
+from sqlalchemy import Integer, String, Boolean, Column, Table, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Self
 
 from backend.entities.academics.section_member_entity import SectionMemberEntity
-from backend.models.academics.section_member import SectionMember
 from .entity_base import EntityBase
 from .user_role_table import user_role_table
 from ..models import User, PublicUser
 
 from ..entities.announcement_entity import AnnouncementEntity
+from ..entities.announcement_user_table import (
+    announcement_favorite_table,
+    announcement_upvote_table,
+)
 from ..entities.announcements_comment_entity import AnnouncementCommentEntity
 
 __authors__ = ["Kris Jordan", "Matt Vu"]
@@ -74,6 +77,20 @@ class UserEntity(EntityBase):
         back_populates="author"
     )
 
+    # many to many relationship between users (many) and announcements (many)
+    announcement_upvotes: Mapped[list["AnnouncementEntity"]] = relationship(
+        "AnnouncementEntity",
+        secondary=announcement_upvote_table,
+        back_populates="upvotes",
+    )
+
+    # many to many relationship between users (many) and announcements (many)
+    announcement_favorites: Mapped[list["AnnouncementEntity"]] = relationship(
+        "AnnouncementEntity",
+        secondary=announcement_favorite_table,
+        back_populates="favorites",
+    )
+
     @classmethod
     def from_model(cls, model: User) -> Self:
         """
@@ -118,6 +135,9 @@ class UserEntity(EntityBase):
             github_avatar=self.github_avatar,
             pronouns=self.pronouns,
             accepted_community_agreement=self.accepted_community_agreement,
+            favorite_announcements_id=[
+                announcement.id for announcement in self.announcement_favorites
+            ],
         )
 
     def to_public_model(self) -> PublicUser:
@@ -154,3 +174,39 @@ class UserEntity(EntityBase):
         self.github_id = model.github_id or None
         self.github_avatar = model.github_avatar or ""
         self.accepted_community_agreement = model.accepted_community_agreement
+
+    def upvote_announcement(self, announcement_entity: AnnouncementEntity):
+        """
+        Upvotes the given announcement for this user.
+
+        Parameters:
+            announcement_entity (AnnouncementEntity): The announcement entity to upvote.
+        """
+
+        if announcement_entity not in self.announcement_upvotes:
+            self.announcement_upvotes.append(announcement_entity)
+            return True
+        return False
+
+    def remove_upvote_announcement(self, announcement_entity: AnnouncementEntity):
+        """
+        Removes upvote for the given announcement for this user.
+
+        Parameters:
+            announcement_entity (AnnouncementEntity): The announcement entity to upvote.
+        """
+
+        if announcement_entity in self.announcement_upvotes:
+            self.announcement_upvotes.remove(announcement_entity)
+            return True
+        return False
+
+    def check_upvote_announcement(self, announcement_entity: AnnouncementEntity):
+        """
+        Checks if the user entity contains the given announcement in its announcement slist
+
+        Parameters:
+            announcement_entity (AnnouncementEntity): The announcement entity to upvote.
+        """
+
+        return announcement_entity in self.announcement_upvotes

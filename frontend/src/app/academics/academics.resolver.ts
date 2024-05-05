@@ -42,7 +42,6 @@ export const courseResolver: ResolveFn<Course | undefined> = (route, state) => {
     .getCourse(route.paramMap.get('id')!)
     .pipe(
       catchError((error) => {
-        console.log(error);
         return of(undefined);
       })
     );
@@ -86,7 +85,6 @@ export const termResolver: ResolveFn<Term | undefined> = (route, state) => {
     .getTerm(route.paramMap.get('id')!)
     .pipe(
       catchError((error) => {
-        console.log(error);
         return of(undefined);
       })
     );
@@ -121,7 +119,6 @@ export const sectionResolver: ResolveFn<Section | undefined> = (
     .getSection(+route.paramMap.get('id')!)
     .pipe(
       catchError((error) => {
-        console.log(error);
         return of(undefined);
       })
     );
@@ -153,7 +150,6 @@ export const roomResolver: ResolveFn<Room | undefined> = (route, state) => {
     .getRoom(route.paramMap.get('id')!)
     .pipe(
       catchError((error) => {
-        console.log(error);
         return of(undefined);
       })
     );

@@ -5,6 +5,8 @@ import { AdminRoleDetailsComponent } from './roles/details/admin-role-details.co
 import { AdminRolesListComponent } from './roles/list/admin-roles-list.component';
 import { AdminUsersListComponent } from './users/list/admin-users-list.component';
 import { AdminOrganizationListComponent } from './organization/list/admin-organization-list.component';
+import { AdminAnnouncementService } from './announcements/admin-announcements-service';
+import { AdminAnnouncementsListComponent } from './announcements/list/admin-announcements-list.component';
 
 const routes: Routes = [
   {
@@ -14,7 +16,8 @@ const routes: Routes = [
       AdminUsersListComponent.Route,
       AdminRolesListComponent.Route,
       AdminRoleDetailsComponent.Route,
-      AdminOrganizationListComponent.Route
+      AdminOrganizationListComponent.Route,
+      AdminAnnouncementsListComponent.Route
     ]
   }
 ];

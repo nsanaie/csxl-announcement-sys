@@ -24,7 +24,7 @@ class AnnouncementCommentEntity(EntityBase):
     # comment text
     text: Mapped[str] = mapped_column(String, nullable=False, default="")
     # posted date
-    posted_date: Mapped[str] = mapped_column(String, nullable=False)
+    posted_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     # one to many relationship between comments (many) and authors (single)
     author_id: Mapped[int] = mapped_column(ForeignKey("user.id"))

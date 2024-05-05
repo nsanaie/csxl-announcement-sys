@@ -27,6 +27,7 @@ root = User(
     last_name="Root",
     pronouns="She / Her / Hers",
     accepted_community_agreement=True,
+    github_avatar="https://avatars.githubusercontent.com/u/111389454?v=4",
 )
 
 ambassador = User(

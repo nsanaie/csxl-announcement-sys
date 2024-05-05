@@ -1,0 +1,100 @@
+<!-- HTML Structure of Admin Announcements List -->
+<div class="content" *ngIf="announcements$ | async as announcements">
+    <table mat-table [dataSource]="announcements">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="header">
+            Announcements
+            <button mat-stroked-button (click)="createAnnouncement()">
+              Create
+            </button>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="row">
+            <mat-card-header class="announcement-header">
+                <div>
+                  <!-- Announcement Name and Logo -->
+                  <div class="announcement-top-header-group">
+                    <!-- Announcement Logo (Tablets/Phones) -->
+                    <img
+                      mat-card-image
+                      src="{{ element.image }}"
+                      class="logo"
+                      [ngStyle]="{
+                        width: '32px',
+                        height: '32px',
+                        'margin-right': '16px',
+                        'border-radius': '50%'
+                      }" 
+                      *ngIf="element!.image; else default"/>
+                    <ng-template #default>
+                      <p *ngIf="profile && profile.first_name && profile.last_name" class="user-avatar">
+                        {{ profile!.first_name.charAt(0) }}{{ profile!.last_name.charAt(0) }}
+                      </p>
+                    </ng-template>
+                    <!-- Announcements Name -->
+                    <div class="draft-text"*ngIf="element.status == AnnouncementStatus.DRAFT">
+                      <p>Draft*</p>
+                    </div>
+                    <div class="archived-text"*ngIf="element.status == AnnouncementStatus.ARCHIVED">
+                      <p>Archived*</p>
+                    </div>
+                    <div class="Announcement-title-section">
+                      <mat-card-title class="title">
+                        {{ element!.headline }}
+                      </mat-card-title>
+                    </div>
+                    
+                  </div>
+            
+                  <!-- Announcement Body -->
+                  <p
+                    class="Announcement-body">
+                    {{ element!.syn }}
+                  </p>
+                </div>
+            </mat-card-header>
+            <div class="button-groups">
+              <div class="top-buttons-group">
+                <button mat-stroked-button class="editLink" routerLink="/announcements/{{element.slug!}}/edit">
+                    Edit
+                </button>
+                <ng-container class = "draft-container" *ngIf="element.status !== AnnouncementStatus.DRAFT">
+                  <button mat-stroked-button (click)="archiveAnnouncement(element)">
+                    {{ element.status === AnnouncementStatus.PUBLISHED ? 'Archive' : 'Unarchive' }}
+                  </button>
+                </ng-container>
+              </div>
+              <div class="bottom-buttons-group">
+                <ng-container *ngIf="element.status === AnnouncementStatus.DRAFT">
+                  <button mat-stroked-button>
+                    <a class="detailsLink" routerLink="/announcements/{{element.slug!}}">
+                      Preview
+                    </a>
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="element.status !== AnnouncementStatus.DRAFT">
+                  <button mat-stroked-button class="detailsLink" routerLink="/announcements/{{element.slug!}}">
+                      Details
+                  </button>
+                </ng-container>
+                  <div class = "delete-btn">
+                    <button mat-stroked-button (click)="deleteAnnouncement(element)">
+                      Delete
+                    </button>
+                  </div>
+
+              </div>
+            </div>
+            
+              
+            
+          </div>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>

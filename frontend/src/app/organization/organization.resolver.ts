@@ -55,7 +55,6 @@ export const organizationDetailResolver: ResolveFn<Organization | undefined> = (
     .getOrganization(route.paramMap.get('slug')!)
     .pipe(
       catchError((error) => {
-        console.log(error);
         return of(undefined);
       })
     );

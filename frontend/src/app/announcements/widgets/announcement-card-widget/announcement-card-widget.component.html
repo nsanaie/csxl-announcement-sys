@@ -1,23 +1,29 @@
 <mat-card 
   class="announcement-details-page-widget"
-  *ngIf="announcement !== undefined"
+  *ngIf="announcement !== undefined && announcement.status === AnnouncementStatus.PUBLISHED"
   appearance="outlined">
   <!-- Announcement Card Header (Image, Name, Description) -->
   <mat-card-header class="announcement-header">
-    <div>
+    <div class = "box-container">
       <!-- Announcement Name and Logo -->
       <div class="announcement-top-header-group">
         <!-- Announcement Logo (Tablets/Phones) -->
         <img
           mat-card-image
-          src="{{ announcement!.image }}"
+          src="{{ announcement.image }}"
           class="logo"
           [ngStyle]="{
             width: '32px',
             height: '32px',
             'margin-right': '16px',
             'border-radius': '50%'
-          }" />
+          }" 
+          *ngIf="announcement!.image; else default"/>
+        <ng-template #default>
+          <p *ngIf="profile && profile.first_name && profile.last_name" class="user-avatar">
+            {{ profile!.first_name.charAt(0) }}{{ profile!.last_name.charAt(0) }}
+          </p>
+        </ng-template>
         <!-- Announcements Name -->
         <div class="Announcement-title-section">
           <mat-card-title class="title">
@@ -39,7 +45,7 @@
         </a>
         <a
           class="organization-link"
-          *ngIf="announcement.organization_slug !== undefined"
+          *ngIf="announcement.organization_slug"
           (click)="handleOrganizationClick()">
           <button mat-stroked-button>Organization</button>
         </a>

@@ -36,6 +36,7 @@ class User(UserIdentity, BaseModel):
     github_id: int | None = None
     github_avatar: str | None = None
     accepted_community_agreement: bool = False
+    favorite_announcements_id: list[int] = []
 
 
 class NewUser(User, BaseModel):

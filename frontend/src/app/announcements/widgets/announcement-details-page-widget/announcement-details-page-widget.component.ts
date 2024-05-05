@@ -1,19 +1,21 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
-import { Announcement } from '../../announcement.model';
+import { Announcement, UpvoteBoolean } from '../../announcement.model';
 import { AnnouncementsService } from '../../announcements.service';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  Navigation,
   ResolveFn,
   Route,
   Router
 } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { Profile } from 'src/app/profile/profile.service';
+import { Profile, ProfileService } from 'src/app/profile/profile.service';
 import { PermissionService } from 'src/app/permission.service';
 import { AuthenticationService } from 'src/app/authentication.service';
+import { AnnouncementStatus } from '../../announcement.model';
 
 @Component({
   selector: 'app-announcement-details-page-widget',
@@ -22,14 +24,22 @@ import { AuthenticationService } from 'src/app/authentication.service';
 })
 export class AnnouncementDetailsPageWidgetComponent implements OnInit {
   isUserSignedIn: boolean = false;
+  didUserUpvote: boolean = false;
+  didUserFavorite: boolean = false;
+
   @Input() announcement?: Announcement;
   @Input() profile?: Profile;
+  @Input() commentBox?: boolean;
+  @Output() openCommentBox = new EventEmitter<boolean>();
+
+  public AnnouncementStatus = AnnouncementStatus;
 
   constructor(
     private permission: PermissionService,
     private location: Location,
     private snackBar: MatSnackBar,
     private announcementsService: AnnouncementsService,
+    private profileService: ProfileService,
     private authService: AuthenticationService,
     private router: Router
   ) {}
@@ -38,16 +48,106 @@ export class AnnouncementDetailsPageWidgetComponent implements OnInit {
     this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       this.isUserSignedIn = isAuthenticated;
     });
+    if (this.isUserSignedIn && this.announcement !== undefined) {
+      this.announcementsService
+        .checkUserUpvote(this.announcement.slug)
+        .subscribe((data) => {
+          this.didUserUpvote = data.upvoted;
+        });
+      this.announcementsService
+        .checkUserFavorite(this.announcement.slug)
+        .subscribe((data) => {
+          this.didUserFavorite = data.upvoted;
+        });
+    }
   }
 
-  copyUrl() {
+  goBack(): void {
+    this.location.back();
+  }
+
+  handleCommentClick() {
+    this.openCommentBox.emit(!this.commentBox);
+  }
+
+  handleAddFavoriteClick() {
+    if (
+      this.isUserSignedIn &&
+      this.announcement !== undefined &&
+      !this.didUserFavorite
+    ) {
+      this.announcementsService
+        .addUserFavorite(this.announcement.slug)
+        .subscribe((data) => {
+          this.didUserFavorite = data.upvoted;
+        });
+    }
+  }
+
+  handleRemoveFavoriteClick() {
+    if (
+      this.isUserSignedIn &&
+      this.announcement !== undefined &&
+      this.didUserFavorite
+    ) {
+      this.announcementsService
+        .removeUserFavorite(this.announcement.slug)
+        .subscribe((data) => {
+          this.didUserFavorite = data.upvoted;
+        });
+    }
+  }
+
+  handleAddUpvoteClick() {
+    if (
+      this.isUserSignedIn &&
+      this.announcement !== undefined &&
+      !this.didUserUpvote
+    ) {
+      const prevUpvote = this.didUserUpvote;
+      this.announcementsService
+        .incrementUpvoteCount(this.announcement.slug)
+        .subscribe((data) => {
+          this.didUserUpvote = data.upvoted;
+          if (
+            prevUpvote != this.didUserUpvote &&
+            this.announcement !== undefined &&
+            this.announcement.upvote_count !== null
+          ) {
+            this.announcement.upvote_count += 1;
+          }
+        });
+    }
+  }
+
+  handleRemoveUpvoteClick() {
+    if (
+      this.isUserSignedIn &&
+      this.announcement !== undefined &&
+      this.didUserUpvote
+    ) {
+      const prevUpvote = this.didUserUpvote;
+      this.announcementsService
+        .decrementUpvoteCount(this.announcement.slug)
+        .subscribe((data) => {
+          this.didUserUpvote = data.upvoted;
+          if (
+            prevUpvote != this.didUserUpvote &&
+            this.announcement !== undefined &&
+            this.announcement.upvote_count !== null
+          ) {
+            this.announcement.upvote_count -= 1;
+          }
+        });
+    }
+  }
+
+  handleShareClick() {
     if (this.announcement !== undefined) {
       this.announcementsService
         .updateShareCount(this.announcement.slug)
-        .subscribe((data) => {
-          console.log(data);
-        });
-      const urlString = 'http://localhost:1560' + this.location.path();
+        .subscribe();
+      const urlString = window.location.href;
       navigator.clipboard
         .writeText(urlString)
         .then(() => {
@@ -55,20 +155,19 @@ export class AnnouncementDetailsPageWidgetComponent implements OnInit {
         })
         .catch((error) => {
           console.error('Failed to copy URL to clipboard', error);
+          this.snackBar.open('Failed to copy URL to clipboard', '', {
+            duration: 3000
+          });
         });
     }
   }
 
-  handleClick() {
+  handleOrgClick() {
     if (this.announcement && this.announcement.organization_slug) {
-      console.log(this.announcement.organization_slug);
-      // Assuming 'slug' is the property that identifies an organization
       const organizationSlug = this.announcement.organization_slug!;
       this.router.navigateByUrl(`/organizations/${organizationSlug}`);
     } else {
-      // Handle the case when the clicked item is not recognized as an organization
       console.error('Clicked item is not recognized as an organization.');
-      // Optionally, you can implement error handling or other logic here
     }
   }
 }

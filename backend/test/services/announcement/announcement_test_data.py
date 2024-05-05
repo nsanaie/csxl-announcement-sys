@@ -2,6 +2,7 @@
 
 import pytest
 from sqlalchemy.orm import Session
+from datetime import datetime
 from ....models.announcement import Announcement, AnnouncementStatus
 from ....models.announcement_details import AnnouncementDetails
 from ....entities.announcement_entity import AnnouncementEntity
@@ -27,7 +28,6 @@ announcement_1 = Announcement(
     status=AnnouncementStatus.PUBLISHED,
     view_count=25,
     share_count=5,
-    published_date="2024-04-16T15:33:25.326Z",
 )
 
 announcement_2 = Announcement(
@@ -42,7 +42,6 @@ announcement_2 = Announcement(
     status=AnnouncementStatus.PUBLISHED,
     view_count=1,
     share_count=1,
-    published_date="2024-04-16T15:33:25.326Z",
 )
 
 announcement_3 = Announcement(
@@ -51,7 +50,7 @@ announcement_3 = Announcement(
     syn="Positions open for project and education members",
     body="Positions open for project and education members. Apply for CSSG by Feb 9 to work on one of our project teams.",
     author_id=1,
-    slug="pminterestdraft",
+    slug="test1",
     organization_id=2,
     image="https://raw.githubusercontent.com/briannata/comp423_a3_starter/main/logos/pm.jpg",
     status=AnnouncementStatus.DRAFT,
@@ -59,7 +58,79 @@ announcement_3 = Announcement(
     share_count=0,
 )
 
-announcements = [announcement_1, announcement_2, announcement_3]
+announcement_4 = Announcement(
+    id=4,
+    headline="ACM Club interest meeting",
+    syn="Positions open for project and education members",
+    body="Positions open for project and education members. Apply for ACM Club by Feb 9 to work on one of our project teams.",
+    author_id=1,
+    slug="pminterestdraft",
+    organization_id=2,
+    image="https://raw.githubusercontent.com/briannata/comp423_a3_starter/main/logos/acm.jpg",
+    status=AnnouncementStatus.DRAFT,
+    view_count=0,
+    share_count=0,
+)
+
+announcement_5 = Announcement(
+    id=5,
+    headline="GWC Club interest meeting",
+    syn="Positions open for project and education members",
+    body="Positions open for project and education members. Apply for GWC Club by Feb 9 to work on one of our project teams.",
+    author_id=1,
+    slug="broke",
+    organization_id=2,
+    image="https://raw.githubusercontent.com/briannata/comp423_a3_starter/main/logos/gwc.png",
+    status=AnnouncementStatus.ARCHIVED,
+    view_count=0,
+    share_count=0,
+)
+
+announcement_6 = Announcement(
+    id=6,
+    headline="KTP Club interest meeting",
+    syn="Positions open for project and education members",
+    body="Positions open for project and education members. Apply for KTP Club by Feb 9 to work on one of our project teams.",
+    author_id=2,
+    slug="author-draft",
+    organization_id=2,
+    image="https://raw.githubusercontent.com/briannata/comp423_a3_starter/main/logos/ktp.png",
+    status=AnnouncementStatus.ARCHIVED,
+    view_count=0,
+    share_count=0,
+)
+
+announcement_7 = Announcement(
+    id=7,
+    headline="ACM Club interest meeting",
+    syn="Positions open for project and education members",
+    body="Positions open for project and education members. Apply for ACM Club by Feb 9 to work on one of our project teams.",
+    author_id=2,
+    slug="not-author-draft",
+    organization_id=2,
+    image="https://raw.githubusercontent.com/briannata/comp423_a3_starter/main/logos/acm.jpg",
+    status=AnnouncementStatus.DRAFT,
+    view_count=0,
+    share_count=0,
+)
+
+published_announcements = [announcement_1, announcement_2]
+announcements = [
+    announcement_1,
+    announcement_2,
+    announcement_3,
+    announcement_4,
+    announcement_5,
+    announcement_6,
+    announcement_7,
+]
+admin_announcements = [
+    announcement_1,
+    announcement_2,
+    announcement_3,
+    announcement_4,
+    announcement_5,
+]
 
 
 def insert_fake_data(session: Session):
@@ -70,6 +141,8 @@ def insert_fake_data(session: Session):
     # Create entities for test organization data
     entities = []
     for ann in announcements:
+        if ann.status == AnnouncementStatus.PUBLISHED:
+            ann.published_date = datetime.now()
         entity = AnnouncementEntity.from_model(ann)
         session.add(entity)
         entities.append(entity)

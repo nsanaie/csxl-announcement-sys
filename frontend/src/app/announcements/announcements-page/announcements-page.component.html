@@ -5,9 +5,48 @@
     </button>
 
 </div> -->
-<h2 class="page-title">Latest CSXL announcements!</h2>
+<div class="page-container">
+    <div class="search-container">
+        <search-bar class="search-bar" [(searchBarQuery)]="searchBarQuery" (searchBarQueryChange)="updatePage()"/>
+        <social-media-icon class="sort-icon"
+        [fontIcon]="'favorite_border'" 
+        (click)="handleFavoriteClick()"
+        *ngIf="!favoriteToggle"/>
+        <social-media-icon class="sort-icon"
+        [fontIcon]="'favorite'" 
+        (click)="handleFavoriteClick()"
+        *ngIf="favoriteToggle"/>
+        <social-media-icon class="sort-icon"
+        [fontIcon]="'calendar_month'" 
+        (click)="handleSortClick()"
+        *ngIf="sortMethod === 'newest'"/>
+        <social-media-icon class="sort-icon"
+        [fontIcon]="'thumbs_up_down'" 
+        (click)="handleSortClick()"
+        *ngIf="sortMethod === 'upvotes'"/>
+        <social-media-icon class="sort-icon"
+        [fontIcon]="'remove_red_eye'" 
+        (click)="handleSortClick()"
+        *ngIf="sortMethod === 'views'"/>
+    </div>    
     <announcement-card-widget
         [announcement]="announcement"
         [profile]="profile"
         [profilePermission]="permValues"
-        *ngFor="let announcement of announcements" />
+        *ngFor="let announcement of filteredAnnouncements" />
+    <div class="pagination">
+        <social-media-icon class="arrow-icon"
+        [fontIcon]="'first_page'"
+        (click)="onPageChange(1)"/>
+        <social-media-icon class="arrow-icon"
+        [fontIcon]="'keyboard_arrow_left'"
+        (click)="onPageChange(currentPage - 1)"/>
+        <span class = "page-number">{{ currentPage }} / {{ totalPages }}</span>
+        <social-media-icon class="arrow-icon"
+        [fontIcon]="'keyboard_arrow_right'"
+        (click)="onPageChange(currentPage + 1)"/>
+        <social-media-icon class="arrow-icon"
+        [fontIcon]="'last_page'"
+        (click)="onPageChange(totalPages)"/>
+    </div>
+</div>

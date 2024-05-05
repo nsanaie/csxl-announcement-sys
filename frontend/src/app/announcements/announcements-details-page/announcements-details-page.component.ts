@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { permissionGuard } from 'src/app/permission.guard';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Announcement } from '../announcement.model';
 import { AnnouncementsService } from '../announcements.service';
 import { AnnouncementStatus } from '../announcement.model';
@@ -48,13 +48,6 @@ export class AnnouncementsDetailsPageComponent implements OnInit {
       announcement: announcementDetailResolver,
       profile: profileResolver
     }
-    // children: [
-    //   {
-    //     path: '',
-    //     title: titleResolver,
-    //     component: AnnouncementsDetailsPageComponent
-    //   }
-    // ]
   };
   displayedComment: string = '';
 
@@ -63,6 +56,7 @@ export class AnnouncementsDetailsPageComponent implements OnInit {
   public first_name?: string;
   public last_name?: string;
   isUserSignedIn: boolean = false;
+  showCommentBox: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -82,6 +76,16 @@ export class AnnouncementsDetailsPageComponent implements OnInit {
     this.profile = data.profile;
     this.comments = this.announcement?.comments || [];
     this.slug = this.route.snapshot.params['slug'];
+
+    this.comments.sort((a, b) => {
+      if (!a.posted_date) return 1;
+      if (!b.posted_date) return -1;
+
+      const dateA = new Date(a.posted_date);
+      const dateB = new Date(b.posted_date);
+
+      return dateB.getTime() - dateA.getTime();
+    });
   }
 
   ngOnInit(): void {
@@ -90,14 +94,19 @@ export class AnnouncementsDetailsPageComponent implements OnInit {
     });
   }
 
+  toggleCommentBox(open: boolean) {
+    this.showCommentBox = open;
+  }
+
   submitComment() {
-    // Logic to submit the comment
-    // For demonstration purposes, let's create a new comment object and add it to the comments array
-    let posted_date: Date = new Date();
-    let date_long_string = posted_date.toLocaleDateString();
-    let date_string = `${posted_date.getFullYear()}-${this.addLeadingZero(
-      posted_date.getMonth() + 1
-    )}-${this.addLeadingZero(posted_date.getDate())}`;
+
+    this.showCommentBox = false;
+
+    if (this.userComment === '') {
+      this.snackBar.open('Cannot submit an empty comment', '', {
+        duration: 3000
+      });
+    }
 
     const publicUser = {
       id: this.profile.id!,
@@ -111,17 +120,18 @@ export class AnnouncementsDetailsPageComponent implements OnInit {
     const newComment: Comment = {
       id: 0,
       text: this.userComment,
-      posted_date: date_string, // You can replace this with the actual date
+      posted_date: null,
       author_id: this.profile.id!,
       author: publicUser
     };
-    // Clear the input field after submitting the comment
     this.announcementService
       .createComment(newComment, this.slug)
       .subscribe(() => {
         //  Stay on the announcement once the operation is complete.
-        this.comments.push(newComment);
+        newComment.posted_date = new Date();
+        this.comments.unshift(newComment);
         this.router.navigate(['/announcements/' + this.slug]);
+        this.snackBar.open('Comment posted', '', { duration: 3000 });
       });
     this.userComment = '';
   }

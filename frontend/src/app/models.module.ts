@@ -21,6 +21,7 @@ export interface Profile {
   github_id: number | null;
   github_avatar: string | null;
   accepted_community_agreement: boolean;
+  favorite_announcements_id: number[];
 }
 
 /** Interface for UserSummary Type (used on frontend for user requests) */

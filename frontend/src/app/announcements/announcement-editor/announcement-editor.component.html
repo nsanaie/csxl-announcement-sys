@@ -1,1 +1,118 @@
-<p>announcement-editor works!</p>
+<!-- HTML Structure of Announcement Editor Page -->
+
+<!-- Update Announcement Form -->
+<form [formGroup]="announcementForm"(ngSubmit)="onSubmit()"
+ >
+    <!-- Update Announcement Card -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title *ngIf="this.announcement_slug === 'new'; else update">
+          Create Announcement
+        </mat-card-title>
+        <ng-template #update>
+          <mat-card-title> Update Announcement </mat-card-title>
+        </ng-template>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Announcement Name Field -->
+        <mat-form-field appearance="outline" color="accent">
+          <mat-label>Headline</mat-label>
+          <input
+            matInput
+            placeholder=""
+            (change)="generateSlug()"
+            formControlName="headline"
+            name="headline"
+            required />
+        </mat-form-field>
+        <!-- Shorthand Field -->
+        <mat-form-field appearance="outline" color="accent">
+          <mat-label>Synopsis</mat-label>
+          <input
+            matInput
+            placeholder=""
+            formControlName="syn"
+            name="syn"
+            required />
+        </mat-form-field>
+        <!-- Slug Field -->
+        <mat-form-field appearance="outline" color="accent">
+          <mat-label>Slug</mat-label>
+          <input
+            matInput
+            placeholder=""
+            formControlName="slug"
+            name="slug"
+            required />
+        </mat-form-field>
+        <!-- Body Field -->
+        <mat-form-field class="body-field" appearance="outline" color="accent">
+          <mat-label>Markdown Body</mat-label>
+          <textarea matInput placeholder="Enter announcement body here." formControlName="body" name="body"></textarea>
+        </mat-form-field>
+        <div class = "cheat-sheet-link">
+          <a  href = "https://www.markdownguide.org/cheat-sheet/" target = "_blank">Markdown Cheat Sheet</a>
+
+        </div>
+        <div class = "basic-syntax-link">
+          <a  href = "https://www.markdownguide.org/basic-syntax/" target = "_blank">Markdown Basic Syntax</a>
+
+        </div>
+        <!-- Image field -->
+        <mat-form-field appearance="outline" color="accent">
+          <mat-label>Image</mat-label>
+          <input
+            matInput
+            placeholder="Paste image url here"
+            formControlName="image"
+            name="image" />
+        </mat-form-field>
+        
+        <!-- Organization Picker -->
+        <ng-container *ngIf="announcement_slug !== 'new'; else displayOrganization">
+          <mat-form-field appearance="outline" color="accent">
+            <mat-label>Organization</mat-label>
+            <input
+              matInput
+              placeholder="Organization"
+              [value]="announcementForm.get('organization')?.value?.name"
+              readonly
+              required
+            />
+          </mat-form-field>
+        </ng-container>
+        
+        
+        <ng-template #displayOrganization>
+          <mat-form-field appearance="outline" color="accent">
+            <mat-label>Organization</mat-label>
+            <mat-select formControlName="organization" id="organization">
+              <mat-option *ngFor="let org of organizations;" [value]="org" (click)="changeId(org.id, org.logo)">
+                {{ org.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-template>
+        
+      </mat-card-content>
+      <mat-card-actions>
+        <!-- Cancel Button -->
+        <button mat-stroked-button type="button" (click)="onCancel()">
+          Cancel
+        </button>
+        <!-- Submit Button -->
+        <button
+          mat-stroked-button
+          type="submit"
+          [disabled]="announcementForm.invalid">
+          Publish
+        </button>
+        <!-- Save as Draft Button -->
+
+        <button mat-stroked-button type="button" *ngIf="this.announcement_slug === 'new' || this.announcement.status == AnnouncementStatus.DRAFT" (click)="onSaveAsDraft()">
+          Save as Draft
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+  

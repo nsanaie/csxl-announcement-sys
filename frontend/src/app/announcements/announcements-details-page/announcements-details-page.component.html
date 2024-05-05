@@ -5,13 +5,18 @@
       [comment]="comment" -->
     <app-announcement-details-page-widget
       [announcement]="announcement"
-      [profile]="profile" />
+      [profile]="profile" 
+      [commentBox]="showCommentBox"
+      (openCommentBox)="toggleCommentBox($event)"/>
 <!-- <app-announcement-comments-widget [
   comment]="comment"
   *ngFor="let comment of comments">
 </app-announcement-comments-widget> -->
 
 
+<div class = "comment-box" *ngIf='isUserSignedIn && showCommentBox'>
+  <textarea class = "comment-textbox" type="text" [(ngModel)]="userComment" placeholder="Input comment here. Press Enter to submit." (keydown.enter)="submitComment()"></textarea>
+</div>
 
 <div class = "user-comment" *ngFor="let comment of comments">
   <mat-card class="Announcement-comments-widget" appearance="outlined">
@@ -27,12 +32,7 @@
       {{ comment.text }}
     </p>
     <footer class="Announcement-comment-posted_date">
-      {{ comment.posted_date | date }}
+      Published: {{ comment.posted_date | date: 'MMM d, y, h:mm a' }}
     </footer>
   </mat-card>
-</div>
-
-<div class = "comment-box" *ngIf='isUserSignedIn'>
-  <textarea class = "comment-textbox" type="text" [(ngModel)]="userComment" placeholder="Input comment here"></textarea>
-<button class = "comment-submit-btn" (click)="submitComment()" mat-stroked-button>Submit</button>
 </div>

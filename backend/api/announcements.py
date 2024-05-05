@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 
 from ..services import AnnouncementService
 from ..models.announcement import Announcement
-from ..models.announcement_details import AnnouncementDetails
+from ..models.announcement_details import AnnouncementDetails, UpvoteBoolean
 from ..models.announcement_comment import Comment
 from ..models.user import User
 from ..api.authentication import registered_user
@@ -18,6 +18,35 @@ openapi_tags = {
     "name": "Announcements",
     "description": "Create, retrieve, update and delete CS Department announcements.",
 }
+
+
+@api.put(
+    "/",
+    responses={404: {"model": None}},
+    response_model=Announcement,
+    tags=["Announcements"],
+)
+def update_announcement(
+    announcement: Announcement,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> Announcement:
+    """
+    Update announcement
+
+    Parameters:
+        announcement: a valid Announcement model
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        Announcement: Updated announcement
+
+    Raises:
+        HTTPException 404 if update() raises an Exception
+    """
+
+    return announcement_service.update_announcement(subject, announcement)
 
 
 @api.get("", response_model=list[Announcement], tags=["Announcements"])
@@ -40,15 +69,20 @@ def get_published_announcements(
 @api.get("/admin", response_model=list[Announcement], tags=["Announcements"])
 def get_admin_announcements(
     subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
 ) -> list[Announcement]:
     """
-    Get all announcements that the user is authorized to view.
+    Get all announcements that the admin user is authorized to view. (ALl published, all archived and only the drafts the user has made)
+
+    Parameters:
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
 
     Returns:
         list[Announcement]: All `Announcement`s in database table that the user is authorized to view.
     """
 
-    # return announcement_service.all_admin(subject)
+    return announcement_service.all_admin(subject)
 
 
 @api.get(
@@ -65,6 +99,7 @@ def get_announcement(
 
     Parameters:
         slug: a string representing a unique identifier for an Announcement
+        announcement_service: a valid AnnouncementService
 
     Returns:
         AnnouncementDetails: AnnouncementDetails object with matching slug
@@ -82,7 +117,7 @@ def get_announcement(
     response_model=AnnouncementDetails,
     tags=["Announcements"],
 )
-def get_announcement(
+def get_admin_announcement(
     slug: str,
     announcement_service: AnnouncementService = Depends(),
     subject: User = Depends(registered_user),
@@ -93,6 +128,7 @@ def get_announcement(
     Parameters:
         slug: a string representing a unique identifier for an Announcement
         subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
 
     Returns:
         AnnouncementDetails: AnnouncementDetails object with matching slug
@@ -101,7 +137,7 @@ def get_announcement(
         HTTPException 404 if get_by_slug() raises an Exception
     """
 
-    # return announcement_service.get_by_slug_admin(subject, slug)
+    return announcement_service.get_by_slug_admin(subject, slug)
     # TODO: add this to deisgn doc
 
 
@@ -129,37 +165,11 @@ def new_announcement(
     return announcement_service.create(subject, announcement)
 
 
-@api.put(
-    "/",
-    responses={404: {"model": None}},
-    response_model=Announcement,
-    tags=["Announcements"],
-)
-def update_announcement(
-    announcement: Announcement,
-    subject: User = Depends(registered_user),
-) -> Announcement:
-    """
-    Update announcement
-
-    Parameters:
-        announcement: a valid Announcement model
-        subject: a valid User model representing the currently logged in User
-
-    Returns:
-        Announcement: Updated announcement
-
-    Raises:
-        HTTPException 404 if update() raises an Exception
-    """
-
-    # return announcement_service.update(subject, announcement)
-
-
 @api.delete("/{slug_id}", response_model=None, tags=["Announcements"])
 def delete_announcement(
     slug_id: str,
     subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
 ):
     """
     Delete announcement based on slug
@@ -167,12 +177,13 @@ def delete_announcement(
     Parameters:
         slug_id: a string representing a unique identifier for an Announcement
         subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
 
     Raises:
         HTTPException 404 if delete() raises an Exception
     """
 
-    # announcement_service.delete(subject, slug)
+    announcement_service.delete(subject, slug_id)
 
 
 @api.put("/{slug}/viewCount", response_model=Announcement, tags=["Announcements"])
@@ -217,10 +228,154 @@ def increment_shares(
         Announcement: Updated announcement
 
     Raises:
-        HTTPException 404 if update_views() raises an Exception
+        HTTPException 404 if update_shares() raises an Exception
     """
 
     return announcement_service.update_shares(subject, slug)
+
+
+@api.put("/{slug}/addFavorite", response_model=UpvoteBoolean, tags=["Announcements"])
+def favorite(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> UpvoteBoolean:
+    """
+    Adds the user to the favorite data for the announcement and the announcement to the favorite data of the user
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        UpvoteBoolean: Model that contains the boolean value for if the user has favorited this announcement.
+
+    Raises:
+        HTTPException 404 if add_upvote() raises an Exception
+    """
+
+    return announcement_service.add_favorite(subject, slug)
+
+
+@api.put("/{slug}/removeFavorite", response_model=UpvoteBoolean, tags=["Announcements"])
+def unfavorite(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> UpvoteBoolean:
+    """
+    Removes the user from the favorite data for the announcement and the announcement from the favorite data of the user
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        UpvoteBoolean: Model that contains the boolean value for if the user has favorited this announcement.
+
+    Raises:
+        HTTPException 404 if add_upvote() raises an Exception
+    """
+
+    return announcement_service.remove_favorite(subject, slug)
+
+
+@api.get("/{slug}/checkFavorite", response_model=UpvoteBoolean, tags=["Announcements"])
+def check_user_favorite(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> UpvoteBoolean:
+    """
+    Checks if the logged in user has favorited the announcement
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        UpvoteBoolean: Model that contains the boolean value for if the user has upvoted this announcement.
+
+    Raises:
+        HTTPException 404 if check_upvote() raises an Exception
+    """
+
+    return announcement_service.check_favorite(subject, slug)
+
+
+@api.put("/{slug}/addUpvote", response_model=UpvoteBoolean, tags=["Announcements"])
+def increment_upvotes(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> UpvoteBoolean:
+    """
+    Increment the announcement upvote count and adds the user to the upvote data for the announcement
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        UpvoteBoolean: Model that contains the boolean value for if the user has upvoted this announcement.
+
+    Raises:
+        HTTPException 404 if add_upvote() raises an Exception
+    """
+
+    return announcement_service.add_upvote(subject, slug)
+
+
+@api.put("/{slug}/removeUpvote", response_model=UpvoteBoolean, tags=["Announcements"])
+def decrement_upvotes(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> UpvoteBoolean:
+    """
+    Decrements the announcement upvote count and removes the user from the upvote data for the announcement
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        UpvoteBoolean: Model that contains the boolean value for if the user has upvoted this announcement.
+
+    Raises:
+        HTTPException 404 if remove_upvote() raises an Exception
+    """
+
+    return announcement_service.remove_upvote(subject, slug)
+
+
+@api.get("/{slug}/checkUpvote", response_model=UpvoteBoolean, tags=["Announcements"])
+def check_user_upvote(
+    slug: str,
+    subject: User = Depends(registered_user),
+    announcement_service: AnnouncementService = Depends(),
+) -> Announcement:
+    """
+    Checks if the logged in user has upvoted the announcement
+
+    Parameters:
+        slug: a string reprsenting a unique identifier for an Announcement
+        subject: a valid User model representing the currently logged in User
+        announcement_service: a valid AnnouncementService
+
+    Returns:
+        UpvoteBoolean: Model that contains the boolean value for if the user has upvoted this announcement.
+
+    Raises:
+        HTTPException 404 if check_upvote() raises an Exception
+    """
+
+    return announcement_service.check_upvote(subject, slug)
 
 
 @api.post("/{slug}/comments", response_model=Comment, tags=["Announcements"])

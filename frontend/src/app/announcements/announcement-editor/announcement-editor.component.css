@@ -1,0 +1,40 @@
+.mat-mdc-card {
+    margin: 1em;
+    max-width: 640px;
+  }
+  
+  .mat-mdc-form-field {
+    width: stretch;
+  }
+  
+  .mat-mdc-card-actions .mdc-button {
+    margin-left: 8px;
+    margin-bottom: 8px;
+  }
+  
+  mat-card-content {
+    margin-top: 8px;
+  }
+
+  .body-field {
+    width: 100%;
+  }
+
+  textarea {
+    resize: vertical; 
+    overflow-wrap: break-word;
+  }
+
+  .cheat-sheet-link, .basic-syntax-link {
+    padding-bottom: 20px;
+  }
+
+  .cheat-sheet-link a, .basic-syntax-link a {
+    text-decoration: none;
+    color: lightskyblue;
+  }
+
+  .preview-btn {
+    position: absolute;
+    right: 16px;
+  }

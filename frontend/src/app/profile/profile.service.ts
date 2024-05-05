@@ -24,6 +24,7 @@ export interface Profile {
   role: number;
   permissions: Permission[];
   accepted_community_agreement: boolean;
+  favorite_announcements_id: number[];
 }
 
 export interface PublicProfile {
@@ -52,7 +53,7 @@ export class ProfileService {
     );
   }
 
-  private refreshProfile(isAuthenticated: boolean) {
+  public refreshProfile(isAuthenticated: boolean) {
     if (isAuthenticated) {
       this.http.get<Profile>('/api/profile').subscribe({
         next: (profile) => this.profile.next(profile),

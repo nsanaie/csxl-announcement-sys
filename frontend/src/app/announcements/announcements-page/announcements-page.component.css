@@ -15,8 +15,33 @@
     column-gap: 1rem;
 }
 
-.page-title {
-    font: sans-serif;
-    padding: 16px;
-    text-align: center;
+.search-bar {
+    flex: 1;
+    padding-right: 10px;
+}
+
+.sort-icon {
+    padding-top: 3px;
+}
+
+.search-container {
+    display: flex;
+    padding-top: 22px;
+    padding-left: 16px;
+    padding-right: 13px;
+}
+
+.page-number {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    flex: 1;
+    padding-left: 16px;
+    padding-right: 16px;
 }

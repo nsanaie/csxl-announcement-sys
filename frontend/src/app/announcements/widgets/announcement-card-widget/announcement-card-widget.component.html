@@ -19,11 +19,11 @@
             'border-radius': '50%'
           }" 
           *ngIf="announcement!.image; else default"/>
-        <ng-template #default>
-          <p *ngIf="profile && profile.first_name && profile.last_name" class="user-avatar">
-            {{ profile!.first_name.charAt(0) }}{{ profile!.last_name.charAt(0) }}
-          </p>
-        </ng-template>
+          <ng-template #default>
+            <p *ngIf="announcement.author && announcement.author.first_name && announcement.author.last_name" class="user-avatar">
+              {{ announcement.author!.first_name.charAt(0) }}{{ announcement.author!.last_name.charAt(0) }}
+            </p>
+          </ng-template>
         <!-- Announcements Name -->
         <div class="Announcement-title-section">
           <mat-card-title class="title">

@@ -22,6 +22,22 @@
   <mat-card class="Announcement-comments-widget" appearance="outlined">
     <!-- Comment Author -->
     <div class="Announcement-author-section">
+      <img
+          mat-card-image
+          src="{{ comment.author!.github_avatar! }}"
+          class="logo"
+          [ngStyle]="{
+            width: '32px',
+            height: '32px',
+            'margin-right': '16px',
+            'border-radius': '50%'
+          }" 
+          *ngIf="comment!.author!.github_avatar; else default"/>
+    <ng-template #default>
+      <p *ngIf="comment.author && comment.author.first_name && comment.author.last_name" class="user-avatar">
+        {{ comment.author!.first_name.charAt(0) }}{{ comment.author!.last_name.charAt(0) }}
+      </p>
+    </ng-template>
       <mat-card-title class="comment-author">
         {{ comment.author!.first_name + " " + comment.author!.last_name}}
       </mat-card-title>

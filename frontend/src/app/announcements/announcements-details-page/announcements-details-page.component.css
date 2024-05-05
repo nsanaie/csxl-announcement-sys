@@ -41,6 +41,22 @@
     padding-top: 5px;
 }
 
+.user-avatar {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    margin-right: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-color: #4786c6;
+    vertical-align: middle;
+    justify-content: center;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 100%;
+  }
+
 /* mat-card-footer {
     margin: 0 1rem 1.25rem 1rem;
 } */

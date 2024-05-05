@@ -1,5 +1,4 @@
 <mat-card class="Announcement-comments-widget" appearance="outlined">
-    <div class = "user-comment" *ngFor="let comment of comments">
     <!-- Comment Author -->
     <div class="Announcement-author-section">
         <mat-card-title class="comment-author">
@@ -8,9 +7,9 @@
     </div>
 
     <!-- Comment Body -->
-    <p class="comment-text">
+    <p *ngIf="comment.text" class="comment-text">
         {{ comment.text }}
     </p>
-    <footer class="Announcement-comment-posted_date">
-        {{ comment.posted_date | date }}
+    <footer *ngIf="comment.posted_date" class="Announcement-comment-posted_date">
+        {{ comment!.posted_date | date }}
     </footer>
